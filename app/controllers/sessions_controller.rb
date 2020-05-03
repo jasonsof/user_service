@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
     
     if user.authenticate(params[:password])
       session = UserSession.create(user: user)
-      render json: { token: session.token }, status: 200
+      render json: { token: session.token }
     else
       render json: { token: nil }, status: 401
     end
