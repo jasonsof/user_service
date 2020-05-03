@@ -32,9 +32,18 @@ RSpec.describe SessionsController do
           expect(response.status).to eq(200)
         end
 
-        it 'returns a UserSession token' do
+        it 'returns a JWT token' do
           post :create, params: { email: @user.email, password: @user.password }
-          expect(response.body).to eq({ token: UserSession.first.token }.to_json)
+
+          token = JWT.encode(
+            {
+              user_id: @user.id,
+              exp: 24.hours.from_now.to_i
+            },
+            Rails.application.secrets.secret_key_base
+          )
+
+          expect(response.body).to eq({ token: token }.to_json)
         end
       end
     end
